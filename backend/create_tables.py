@@ -1,0 +1,7 @@
+# LINK TABLE AND MODELS! 
+from app.database import engine
+from app.models import Base
+
+Base.metadata.create_all(engine)
+
+print("Tables created successfully!")
