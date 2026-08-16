@@ -6,6 +6,7 @@ from enum import Enum
 from pydantic import BaseModel, Field
 
 from fastapi import FastAPI, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 
 from sqlalchemy.orm import Session
 from sqlalchemy import select, func
@@ -56,6 +57,15 @@ class TransactionSummary(BaseModel):
 
 # INITIALISE FASTAPI APP
 app = FastAPI()
+
+# UNBLOCK CORS FOR FRONTEND
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # CHECK IF API IS RUNNING
 @app.get("/")

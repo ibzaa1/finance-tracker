@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import SummaryCard from "./components/SummaryCard";
+import TransactionList from "./components/TransactionList";
+import TransactionForm from "./components/TransactionForm";
 import "./App.css";
 
 function App() {
@@ -9,13 +11,19 @@ function App() {
     net_balance: "0.00",
   });
 
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const handleTransactionCreated = () => {
+    setRefreshKey((value) => value + 1);
+  };
+
   useEffect(() => {
     fetch("http://127.0.0.1:8000/transactions/summary")
       .then((response) => response.json())
       .then((data) => {
         setSummary(data);
       });
-  }, []);
+  }, [refreshKey]);
 
   return (
     <div className="dashboard">
@@ -36,6 +44,8 @@ function App() {
 
         <SummaryCard title="Number of Transactions" value="42" />
       </div>
+      <TransactionForm onTransactionCreated={handleTransactionCreated} />
+      <TransactionList refreshKey={refreshKey} />
     </div>
   );
 }
