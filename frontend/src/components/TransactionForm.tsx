@@ -74,7 +74,9 @@ function TransactionForm({ onTransactionCreated }: TransactionFormProps) {
         <option value="income">Income</option>
       </select>
 
-      <button type="submit">Add Transaction</button>
+      <button className="submit-button" type="submit">
+        Add Transaction
+      </button>
     </form>
   );
 }

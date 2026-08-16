@@ -11,9 +11,13 @@ type Transaction = {
 
 type TransactionListProps = {
   refreshKey: number;
+  onTransactionDeleted: () => void;
 };
 
-function TransactionList({ refreshKey }: TransactionListProps) {
+function TransactionList({
+  refreshKey,
+  onTransactionDeleted,
+}: TransactionListProps) {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   useEffect(() => {
@@ -24,23 +28,51 @@ function TransactionList({ refreshKey }: TransactionListProps) {
       });
   }, [refreshKey]);
 
+  const deleteTransaction = async (id: number) => {
+    const response = await fetch(`http://127.0.0.1:8000/transactions/${id}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      console.error("Failed to delete transaction");
+      return;
+    }
+
+    setTransactions((currentTransactions) =>
+      currentTransactions.filter((transaction) => transaction.id !== id),
+    );
+
+    onTransactionDeleted();
+  };
+
   return (
     <div className="transaction-list">
-      <h2>Recent Transactions</h2>
+      <div className="transaction-container">
+        <h2>Recent Transactions</h2>
+        {transactions.map((transaction) => (
+          <div className="transaction-item" key={transaction.id}>
+            <div>
+              <strong>{transaction.description || "No description"}</strong>
+              <p>{transaction.category}</p>
+            </div>
 
-      {transactions.map((transaction) => (
-        <div className="transaction" key={transaction.id}>
-          <div>
-            <strong>{transaction.description}</strong>
-            <p>{transaction.category}</p>
-          </div>
+            <div>
+              <strong>
+                {transaction.transaction_type === "income" ? "+" : "-"}£
+                {transaction.amount}
+              </strong>
+              <p>{transaction.transaction_type}</p>
+            </div>
 
-          <div>
-            <strong>£{transaction.amount}</strong>
-            <p>{transaction.transaction_type}</p>
+            <button
+              className="delete-button"
+              onClick={() => deleteTransaction(transaction.id)}
+            >
+              Delete
+            </button>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }

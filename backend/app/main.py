@@ -53,6 +53,7 @@ class TransactionSummary(BaseModel):
     total_income: Decimal
     total_expenses: Decimal
     net_balance: Decimal
+    total_transactions: int | None = None
 
 
 # INITIALISE FASTAPI APP
@@ -154,7 +155,8 @@ def get_transactions(db: Session = Depends(get_db)):
 
     return transactions
 
-# TRANSACTION SUMMARY ENDPOINT
+
+# TRANSACTION SUMMARY ENDPOINT
 @app.get("/transactions/summary", response_model=TransactionSummary)
 def get_transaction_summary(
     db: Session = Depends(get_db)
@@ -183,14 +185,21 @@ def get_transaction_summary(
     if total_expenses is None:
         total_expenses = Decimal("0.00")
 
+    transaction_count_statement = select(
+        func.count(TransactionDB.id)
+    )
+
+    result = db.execute(transaction_count_statement)
+    total_transactions = result.scalar_one()
+
     net_balance = total_income - total_expenses
 
     return TransactionSummary(
         total_income=total_income,
         total_expenses=total_expenses,
-        net_balance=net_balance
+        net_balance=net_balance,
+        total_transactions=total_transactions
     )
-
 # GET TRANSACTION BY ID ENDPOINT
 @app.get("/transactions/{transaction_id}", response_model=Transaction)
 def get_transaction(
