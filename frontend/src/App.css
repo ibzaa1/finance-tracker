@@ -1,0 +1,49 @@
+.dashboard {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.dashboard h1 {
+  margin-bottom: 8px;
+}
+
+.dashboard > p {
+  margin-bottom: 40px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.summary-card {
+  padding: 30px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background: white;
+  transition: transform 0.2s ease;
+}
+
+.summary-card h2 {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 12px;
+}
+
+.summary-card p {
+  font-size: 28px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.summary-card:hover {
+  transform: translateY(-5px);
+}
+
+@media (max-width: 800px) {
+  .summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
