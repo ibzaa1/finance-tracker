@@ -4,6 +4,15 @@ import TransactionList from "./components/TransactionList";
 import TransactionForm from "./components/TransactionForm";
 import "./App.css";
 
+type Transaction = {
+  id: number;
+  amount: string;
+  description: string | null;
+  category: string;
+  transaction_type: "income" | "expense";
+  created_at: string;
+};
+
 function App() {
   const [summary, setSummary] = useState({
     total_income: "0.00",
@@ -14,8 +23,20 @@ function App() {
 
   const [refreshKey, setRefreshKey] = useState(0);
 
+  const [editingTransaction, setEditingTransaction] =
+    useState<Transaction | null>(null);
+
   const handleTransactionCreated = () => {
     setRefreshKey((value) => value + 1);
+  };
+
+  const handleTransactionEdit = (transaction: Transaction) => {
+    console.log("APP RECEIVED EDIT:", transaction);
+    setEditingTransaction(transaction);
+  };
+
+  const handleEditingComplete = () => {
+    setEditingTransaction(null);
   };
 
   useEffect(() => {
@@ -46,10 +67,17 @@ function App() {
           value={String(summary.total_transactions)}
         />
       </div>
-      <TransactionForm onTransactionCreated={handleTransactionCreated} />
+
+      <TransactionForm
+        onTransactionCreated={handleTransactionCreated}
+        editingTransaction={editingTransaction}
+        onEditingComplete={handleEditingComplete}
+      />
+
       <TransactionList
         refreshKey={refreshKey}
         onTransactionDeleted={handleTransactionCreated}
+        onTransactionEdit={handleTransactionEdit}
       />
     </div>
   );

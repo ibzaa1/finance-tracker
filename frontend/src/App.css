@@ -156,6 +156,32 @@
   transform: translateY(0);
 }
 
+.transaction-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.edit-button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  background: #e0e7ff;
+  color: #4338ca;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-button:hover {
+  background: #c7d2fe;
+  transform: translateY(-1px);
+}
+
+.edit-button:active {
+  transform: translateY(0);
+}
+
 @media (max-width: 800px) {
   .summary-grid {
     grid-template-columns: repeat(2, 1fr);
